@@ -21,10 +21,20 @@
 <section>
 <body style="width: 100%;height: 100%;">
   <section class="" style="background-image: linear-gradient(to left top,#d9ecc7, #07a3b2);">
+    {% if context.analysis %}
     <div class="container text-center py-5">
-      <h2>Here's our Analysis</h2>
+      <h1>{{ context.analysis.grpname }}</h1>
+      <br>
+      <h5>{{ context.analysis.startDate }} to {{ context.analysis.endDate }}</h5>
       <hr>
     </div>
+    {% endif %}
+    {% if context.analysis %}
+    <div class="container text-center py-5">
+      <h3>Total Messages:{{ context.analysis.totalMessages }}</h3>
+      <hr>
+    </div>
+    {% endif %}
     {% if context.analysis %}
     <div class="container-fluid">
       <div class="row"><center><h3>Users In Group</h3></center></div>
@@ -59,7 +69,7 @@
             <h4>Users Activity by Hours</h4>
           </div>
           <!-- <img src="{{url_for('static', filename='fig3.png')}}" alt="" style="width: 70%; height: 60%;"> -->
-          <iframe src="./static/fig3.html" height="90%" width="80%" frameborder="0"></iframe>
+          <iframe src="./static/fig3.html" height="400px" width="700px" frameborder="0"></iframe>
         </div>
         <hr>
         <div class="w-100"></div>
@@ -68,13 +78,13 @@
             <h4>User Activity by day</h4>
           </div>
           <!-- <img src="{{url_for('static', filename='fig4.png')}}" alt="" style="width: 70%;"> -->
-          <iframe src="./static/fig4.html" height="90%" width="80%" frameborder="0"></iframe>
+          <iframe src="./static/fig4.html" height="400px" width="700px" frameborder="0"></iframe>
         </div>
         <div class="col mb-5">
           <div class="contaier text-center mb-5">
             <h4>Number Messages per month</h4>
           </div>
-          <iframe src="./static/fig5.html" height="90%" width="80%" frameborder="0"></iframe>
+          <iframe src="./static/fig5.html" height="400px" width="700px" frameborder="0"></iframe>
 
         </div>
         <div class="w-100"></div>
@@ -82,7 +92,7 @@
           <div class="contaier text-center mb-5">
             <h4>Number Messages per month</h4>
           </div>
-          <iframe src="./static/fig6.html" height="90%" width="80%" frameborder="0"></iframe>
+          <iframe src="./static/fig6.html" height="400px" width="700px" frameborder="0"></iframe>
 
         </div>
         <div class="col mb-5">

@@ -413,7 +413,8 @@ elif(Neutral>Positive and Neutral>Negative):
   finalSentiment='Neutral'
 else:
   finalSentiment='Neutral'
-
+dfNone = df.copy()
+dfNone = dfNone[dfNone.Author == "None"]
 def conversation_users(df):
     users = []
     df = df.groupby('Author').count().reset_index()
@@ -421,10 +422,38 @@ def conversation_users(df):
         users.append(row['Author'])
     users.remove('None')
     return users
+def group_name(dfNone):
+  grpname = dfNone['Message'][0]
+  def findGname(x):
+    if 'changed the subject' in x:
+      gname = x
+      return gname
+  grpname1=dfNone['Message'].apply(findGname)
+  grpname1 = grpname1.replace(to_replace='None', value=np.nan).dropna()
+  if grpname1.size==0:
+    grpnamef = grpname
+    flag=1
+  else:
+    grpnamef= grpname1.iloc[-1]
+    flag=0
+  if flag==0:
+    gname=re.findall('to ".+"',grpnamef)
+    grpnamef=gname[0].replace("to ",'')
+    grpnamef=grpnamef.strip('"')
+    return grpnamef
+  else:
+    gname = re.findall('".+"',grpnamef)
+    grpnamef=gname[0].strip('"')
+    return grpnamef
+
+startDate=df['dateTime'][0]
+endDate=df['dateTime'][len(df)-1]
+totalMessages=df2['Message'].count()
 users = conversation_users(df)
+grpname = group_name(dfNone)
 def dataInsights():
   return {'users':users,
-          'userCount':len(users)}
+          'userCount':len(users),'grpname':grpname,'startDate':startDate,'endDate':endDate,'totalMessages':totalMessages}
 
 
 
