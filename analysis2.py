@@ -282,7 +282,7 @@ word_cloud = Counter(nostops)
 word_cloud
 
 def makeImage(text):
-    alice_mask = np.array(Image.open("C:\\Users\\91798\\Desktop\\WAA\\WAA\\b1.png"))
+    alice_mask = np.array(Image.open("b1.png"))
     wc = WordCloud(background_color="white", max_words=1000, mask=alice_mask)
     # generate word cloud
     wc.generate_from_frequencies(text)
@@ -317,19 +317,16 @@ hf = df_sent.sort_values(by = ["Negative"])
 hf = hf.tail(5)
 neg = hf["Message"].tolist()
 print("The top 5 Negative words in the chat are:")
-neg
 
 hf = df_sent.sort_values(by = ["Positive"])
 hf = hf.tail(5)
 p = hf["Message"].tolist()
 print("The top 5 Positive words in the chat are:")
-p
 
 hf = df_sent.sort_values(by = ["Neutral"])
 hf = hf.tail(5)
 neu = hf["Message"].tolist()
 print("The top 5 Neutral words in the chat are:")
-neu
 
 final_sentiments = []
 for i in p:
@@ -413,8 +410,7 @@ elif(Neutral>Positive and Neutral>Negative):
   finalSentiment='Neutral'
 else:
   finalSentiment='Neutral'
-dfNone = df.copy()
-dfNone = dfNone[dfNone.Author == "None"]
+
 def conversation_users(df):
     users = []
     df = df.groupby('Author').count().reset_index()
@@ -422,38 +418,10 @@ def conversation_users(df):
         users.append(row['Author'])
     users.remove('None')
     return users
-def group_name(dfNone):
-  grpname = dfNone['Message'][0]
-  def findGname(x):
-    if 'changed the subject' in x:
-      gname = x
-      return gname
-  grpname1=dfNone['Message'].apply(findGname)
-  grpname1 = grpname1.replace(to_replace='None', value=np.nan).dropna()
-  if grpname1.size==0:
-    grpnamef = grpname
-    flag=1
-  else:
-    grpnamef= grpname1.iloc[-1]
-    flag=0
-  if flag==0:
-    gname=re.findall('to ".+"',grpnamef)
-    grpnamef=gname[0].replace("to ",'')
-    grpnamef=grpnamef.strip('"')
-    return grpnamef
-  else:
-    gname = re.findall('".+"',grpnamef)
-    grpnamef=gname[0].strip('"')
-    return grpnamef
-
-startDate=df['dateTime'][0]
-endDate=df['dateTime'][len(df)-1]
-totalMessages=df2['Message'].count()
 users = conversation_users(df)
-grpname = group_name(dfNone)
 def dataInsights():
   return {'users':users,
-          'userCount':len(users),'grpname':grpname,'startDate':startDate,'endDate':endDate,'totalMessages':totalMessages}
+          'userCount':len(users)}
 
 
 
