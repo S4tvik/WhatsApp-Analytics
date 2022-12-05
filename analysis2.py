@@ -359,57 +359,63 @@ from nltk.tokenize import word_tokenize
 positive_wds = set(opinion_lexicon.positive())
 negative_wds = set(opinion_lexicon.negative())
 
-def score_sent(sent):
+def sentiment_analysis(df,start,end):
+  start_date = datetime.strptime(start,"%Y-%m-%dT%H:%M").date()
+  start_time = datetime.strptime(start,"%Y-%m-%dT%H:%M").time()
+  end_date = datetime.strptime(end,"%Y-%m-%dT%H:%M").date()
+  end_time = datetime.strptime(end,"%Y-%m-%dT%H:%M").time()
+  dfDate=df[df['Dates']>=start_date]
+  dfDate=df[df['Dates']<=end_date]
+  dfDate=df[df['Time']>=start_time]
+  dfDate=df[df['Time']<=end_time]
+  def score_sent(sent):
     """Returns a score btw -1 and 1"""
     sent = [e.lower() for e in sent if e.isalnum()]
     total = len(sent)
     pos = len([e for e in sent if e in positive_wds])
     neg = len([e for e in sent if e in negative_wds])
     if total > 0:
-        return (pos - neg) / total
+      return (pos - neg) / total
     else:
-        return 0
-
-nltk.download('punkt')
-
-def score_review(review):
+      return 0
+  def score_review(review):
     sentiment_scores = []
     sents = sent_tokenize(review)
     for sent in sents:
-        wds = word_tokenize(sent)
-        sent_scores = score_sent(wds)
-        sentiment_scores.append(sent_scores)
+      wds = word_tokenize(sent)
+      sent_scores = score_sent(wds)
+      sentiment_scores.append(sent_scores)
     return sum(sentiment_scores) / len(sentiment_scores)
-
-dfDate['scores'] = dfDate['Message'].apply(lambda x:score_review(x))
-dfDate
-
-def score_to_rating(value):
+  dfDate['scores'] = dfDate['Message'].apply(lambda x:score_review(x))
+  def score_to_rating(value):
     if value > 0.2:
-        return 2
+      return 2
     if value <= 0.2 and value >= -0.2:
-        return 1
+      return 1
     else:
-        return 0
-dfDate['sentiment'] = dfDate['scores'].apply(lambda x:score_to_rating(x))
-dfDate
+      return 0
+  dfDate['sentiment'] = dfDate['scores'].apply(lambda x:score_to_rating(x))
+  count = list(dfDate['sentiment'])
+  value = Counter(count)
+  Negative = value[0] if value[0] else -1
+  Positive = value[2] if value[2] else -1
+  Neutral = value[1] if value[1] else -1
+  if(Negative==Positive==Neutral):
+    finalSentiment='Neutral'
+  elif(Negative>Positive and Negative>Neutral):
+    finalSentiment='Negative'
+  elif(Positive>Neutral and Positive>Negative):
+    finalSentiment='Positive'
+  elif(Neutral>Positive and Neutral>Negative):
+    finalSentiment='Neutral'
+  else:
+    finalSentiment='Neutral'
+  return dfDate
 
-count = list(dfDate['sentiment'])
-value = Counter(count)
-value
-Negative = value[0] if value[0] else -1
-Positive = value[2] if value[2] else -1
-Neutral = value[1] if value[1] else -1
-if(Negative==Positive==Neutral):
-  finalSentiment='Neutral'
-elif(Negative>Positive and Negative>Neutral):
-  finalSentiment='Negative'
-elif(Positive>Neutral and Positive>Negative):
-  finalSentiment='Positive'
-elif(Neutral>Positive and Neutral>Negative):
-  finalSentiment='Neutral'
-else:
-  finalSentiment='Neutral'
+finalSentiment=sentiment_analysis(df2,"2022-05-11T00:03","2022-05-12T07:37")
+
+  
+
 
 def conversation_users(df):
     users = []
