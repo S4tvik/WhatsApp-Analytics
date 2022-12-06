@@ -32,6 +32,10 @@
     {% if context.analysis %}
     <div class="container text-center py-5">
       <h3>Total Messages:{{ context.analysis.totalMessages }}</h3>
+      <h3>Total Media:{{ context.analysis.mediacount }}</h3>
+      <h3>Emoji Count:{{ context.analysis.emojiCount }}</h3>
+      <h3>Most used Emoji:{{ context.analysis.mostEmoji }}</h3>
+      <h3>No of unique Emoji:{{ context.analysis.uniqueEmoji }}</h3>
       <hr>
     </div>
     {% endif %}
