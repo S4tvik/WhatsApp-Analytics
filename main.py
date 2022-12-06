@@ -10,7 +10,6 @@ def home():
 def uploaded():
     if request.method == 'POST':
         f = request.files['file']
-        
         f.filename="whatsapp.txt"
         f.save(f.filename)
         from analysis2 import p,neg,neu,dataInsights
@@ -25,11 +24,17 @@ def uploaded():
 
 @app.route('/range',methods=['GET','POST'])
 def range():  
+    # context = {}
     if request.method == 'POST':
         start = request.form['start-date']
         print(start)
         end= request.form['end-date']
         print(end)
+        from analysis2 import df2,sentiment_analysis
+        ans=sentiment_analysis(df2,start,end)
+        print(ans)
+        context={'analysis':ans}        
+        return render_template('range.html',context=context)
     return render_template('range.html')
         
     

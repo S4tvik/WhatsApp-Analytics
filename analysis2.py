@@ -27,7 +27,7 @@ def date_time(s):
 
 def find_author(s):
     s = s.split(":")
-    if len(s)==2:
+    if len(s)>=2:
         return True
     else:
         return False
@@ -282,7 +282,7 @@ word_cloud = Counter(nostops)
 word_cloud
 
 def makeImage(text):
-    alice_mask = np.array(Image.open("b1.png"))
+    alice_mask = np.array(Image.open("C:\\Users\\91798\\Desktop\\WAA\\WAA\\b1.png"))
     wc = WordCloud(background_color="white", max_words=1000, mask=alice_mask)
     # generate word cloud
     wc.generate_from_frequencies(text)
@@ -305,28 +305,31 @@ pd.options.mode.chained_assignment = None
 df_sent = df[df.Message != '<Media omitted>']
 df_sent = df_sent[df_sent['Message'].map(len) > 10]
 df_sent.drop(columns=['dates','year','month','hour','date','minutes','day','words','dateTime'],inplace=True)
-df_sent
+
 
 df_sent['Negative']=df_sent['Message'].map(lambda text: sentiment.polarity_scores(text)["neg"])
 df_sent['Neutral']=df_sent['Message'].map(lambda text: sentiment.polarity_scores(text)["neu"])
 df_sent['Positive']=df_sent['Message'].map(lambda text: sentiment.polarity_scores(text)["pos"])
 df_sent['Compound']=df_sent['Message'].map(lambda text: sentiment.polarity_scores(text)["compound"])
-df_sent
+
 
 hf = df_sent.sort_values(by = ["Negative"])
 hf = hf.tail(5)
 neg = hf["Message"].tolist()
 print("The top 5 Negative words in the chat are:")
 
+
 hf = df_sent.sort_values(by = ["Positive"])
 hf = hf.tail(5)
 p = hf["Message"].tolist()
 print("The top 5 Positive words in the chat are:")
 
+
 hf = df_sent.sort_values(by = ["Neutral"])
 hf = hf.tail(5)
 neu = hf["Message"].tolist()
 print("The top 5 Neutral words in the chat are:")
+
 
 final_sentiments = []
 for i in p:
@@ -346,7 +349,7 @@ dtt = datetime.datetime.strptime(dat,"%Y-%m-%d").date()
 # dtt= datetime.date(dtt)
 print(type(df2['Dates']))
 dfDate=df2[df2['Dates']>=dtt]
-dfDate
+
 
 import nltk
 nltk.download('opinion_lexicon')
@@ -358,12 +361,11 @@ from nltk.tokenize import word_tokenize
 
 positive_wds = set(opinion_lexicon.positive())
 negative_wds = set(opinion_lexicon.negative())
-
 def sentiment_analysis(df,start,end):
-  start_date = datetime.strptime(start,"%Y-%m-%dT%H:%M").date()
-  start_time = datetime.strptime(start,"%Y-%m-%dT%H:%M").time()
-  end_date = datetime.strptime(end,"%Y-%m-%dT%H:%M").date()
-  end_time = datetime.strptime(end,"%Y-%m-%dT%H:%M").time()
+  start_date = datetime.datetime.strptime(start,"%Y-%m-%dT%H:%M").date()
+  start_time = datetime.datetime.strptime(start,"%Y-%m-%dT%H:%M").time()
+  end_date = datetime.datetime.strptime(end,"%Y-%m-%dT%H:%M").date()
+  end_time = datetime.datetime.strptime(end,"%Y-%m-%dT%H:%M").time()
   dfDate=df[df['Dates']>=start_date]
   dfDate=df[df['Dates']<=end_date]
   dfDate=df[df['Time']>=start_time]
@@ -410,13 +412,9 @@ def sentiment_analysis(df,start,end):
     finalSentiment='Neutral'
   else:
     finalSentiment='Neutral'
-  return dfDate
-
-finalSentiment=sentiment_analysis(df2,"2022-05-11T00:03","2022-05-12T07:37")
-
-  
-
-
+  return finalSentiment
+dfNone = df.copy()
+dfNone = dfNone[dfNone.Author == "None"]
 def conversation_users(df):
     users = []
     df = df.groupby('Author').count().reset_index()
@@ -424,10 +422,46 @@ def conversation_users(df):
         users.append(row['Author'])
     users.remove('None')
     return users
+def group_name(dfNone):
+  grpname = dfNone['Message'][0]
+  def findGname(x):
+    if 'changed the subject' in x:
+      gname = x
+      return gname
+  grpname1=dfNone['Message'].apply(findGname)
+  grpname1 = grpname1.replace(to_replace='None', value=np.nan).dropna()
+  if grpname1.size==0:
+    grpnamef = grpname
+    flag=1
+  else:
+    grpnamef= grpname1.iloc[-1]
+    flag=0
+  if flag==0:
+    gname=re.findall('to ".+"',grpnamef)
+    grpnamef=gname[0].replace("to ",'')
+    grpnamef=grpnamef.strip('"')
+    return grpnamef
+  else:
+    gname = re.findall('".+"',grpnamef)
+    grpnamef=gname[0].strip('"')
+    return grpnamef
+
+startDate=df['dateTime'][0]
+endDate=df['dateTime'][len(df)-1]
+totalMessages=df2['Message'].count()
+mediacount=df[df['Message'] == '<Media omitted>'].shape[0]
+emojiCount=sum(emoji_final.values())
+mostEmoji=max(zip(emoji_final.values(), emoji_final.keys()))[1]
 users = conversation_users(df)
+grpname = group_name(dfNone)
+uniqueEmoji=len(emoji_final)
 def dataInsights():
   return {'users':users,
-          'userCount':len(users)}
+          'userCount':len(users),'grpname':grpname,'startDate':startDate,'endDate':endDate,'totalMessages':totalMessages,'mediacount':mediacount,'emojiCount':emojiCount,'mostEmoji':mostEmoji
+          ,'uniqueEmoji':uniqueEmoji}
+  
+
+
 
 
 
