@@ -15,7 +15,8 @@ def uploaded():
         from analysis2 import p,neg,neu,dataInsights
         l = []
         l.append(p)
-        l.append(neu)  
+        l.append(neu) 
+        l.append(neg) 
         # print(l)
         context = {'analysis': dataInsights()}
         return render_template('Analysis.html',text=l,context=context)
