@@ -41,10 +41,37 @@
         <br>
     <div class = "container">
         {% if context %}
-            <h3>{{ context.analysis }}</h3>
+           
+
+            <div class="container text-center">
+                <h3>Sentiment Analysis</h3>
+                <h3>{{ context.analysis }}</h3>
+              <br><br>
+              <div class="row mb-5">
+                <div class="col ">
+                  <h3>Top 5 Positve Texts.</h3>
+                </div>
+                <div class="col ">
+                  <h3>Top 5 Neutral Texts.</h3>
+                </div>
+                <div class="col">
+                  <h3>Top 5 Negative Texts.</h3>
+                </div>
+              </div>
+              <div class="row mb-5">
+                {% for i in text %}
+                <div class="col  mb-5">
+                  {%for j in i%}
+                  <h6>{{j}}</h6>
+                  {%endfor%}
+                </div>
+                {% endfor %}
+              </div>
         {% endif %}
     </div>
-    
+    <br>
+    <br><br>
+
     
     </section>
     
