@@ -367,9 +367,10 @@ def sentiment_analysis(df,start,end):
   end_date = datetime.datetime.strptime(end,"%Y-%m-%dT%H:%M").date()
   end_time = datetime.datetime.strptime(end,"%Y-%m-%dT%H:%M").time()
   dfDate=df[df['Dates']>=start_date]
-  dfDate=df[df['Dates']<=end_date]
-  dfDate=df[df['Time']>=start_time]
-  dfDate=df[df['Time']<=end_time]
+  dfDate=dfDate[dfDate['Dates']<=end_date]
+  dfDate=dfDate[dfDate['Time']>=start_time]
+  dfDate=dfDate[dfDate['Time']<=end_time]
+  dfDate=dfDate[dfDate['Message'] != '<Media omitted>']
   def score_sent(sent):
     """Returns a score btw -1 and 1"""
     sent = [e.lower() for e in sent if e.isalnum()]
@@ -396,6 +397,13 @@ def sentiment_analysis(df,start,end):
       return 1
     else:
       return 0
+  def score_to_senti(value):
+    if value > 0.2:
+      return "Positive"
+    if value <= 0.2 and value >= -0.2:
+      return "Neutral"
+    else:
+      return "Negative"
   dfDate['sentiment'] = dfDate['scores'].apply(lambda x:score_to_rating(x))
   count = list(dfDate['sentiment'])
   value = Counter(count)
@@ -412,7 +420,25 @@ def sentiment_analysis(df,start,end):
     finalSentiment='Neutral'
   else:
     finalSentiment='Neutral'
-  return finalSentiment
+  poStatements=dfDate[dfDate['sentiment']==2]
+  hf = poStatements.sort_values(by = ["scores"])
+  hf = hf.tail(5)
+  p = hf["Message"].tolist()
+  negStatements=dfDate[dfDate['sentiment']==0]
+  hf = negStatements.sort_values(by = ["scores"])
+  hf = hf.tail(5)
+  neg = hf["Message"].tolist()
+  neuStatements=dfDate[dfDate['sentiment']==1]
+  hf = neuStatements.sort_values(by = ["scores"])
+  hf = hf.tail(5)
+  neu = hf["Message"].tolist()
+  if len(p)==0:
+    p.append("There are no Postive messages")
+  if len(neg)==0:
+    neg.append("There are no Negative messages")
+  if len(neu)==0:
+    neu.append("There are no Neutral messages")
+  return finalSentiment,p,neg,neu
 dfNone = df.copy()
 dfNone = dfNone[dfNone.Author == "None"]
 def conversation_users(df):
