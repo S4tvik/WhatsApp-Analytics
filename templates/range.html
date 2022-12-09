@@ -17,8 +17,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
 </head>
-<body >
-    <section class="vh-100 " style="background-image: linear-gradient(to left top,#d9ecc7, #07a3b2);">
+<body  style="background-image: linear-gradient(to left top,#d9ecc7, #07a3b2);">
+    <section>
         <div class="container text-center py-5">
             <h2>Please select a range of dates to analyse further...</h2>
         </div>
@@ -46,27 +46,6 @@
             <div class="container text-center">
                 <h3>Sentiment Analysis</h3>
                 <h3>{{ context.analysis }}</h3>
-              <br><br>
-              <div class="row mb-5">
-                <div class="col ">
-                  <h3>Top 5 Positve Texts.</h3>
-                </div>
-                <div class="col ">
-                  <h3>Top 5 Neutral Texts.</h3>
-                </div>
-                <div class="col">
-                  <h3>Top 5 Negative Texts.</h3>
-                </div>
-              </div>
-              <div class="row mb-5">
-                {% for i in text %}
-                <div class="col  mb-5">
-                  {%for j in i%}
-                  <h6>{{j}}</h6>
-                  {%endfor%}
-                </div>
-                {% endfor %}
-              </div>
               <div class="container-fluid text-center">
                 <div class="row">
                   <div class="col mb-5">
@@ -76,6 +55,24 @@
                   </div>
                 </div>
               </div>
+              <div class="row text-center mb-5">
+                <div class="col ">
+                  <h3>Top 5 Positve Texts.</h3>
+                </div>
+                <div class="col">
+                  <h3>Top 5 Negative Texts.</h3>
+                </div>
+              </div>
+              <div class="row text-center mb-5">
+                {% for i in text %}
+                <div class="col  mb-5">
+                  {%for j in i%}
+                  <h6>{{j}}</h6>
+                  {%endfor%}
+                </div>
+                {% endfor %}
+              </div>
+             
         {% endif %}
     </div>
     <br>
