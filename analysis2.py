@@ -300,7 +300,7 @@ word_cloud = Counter(nostops)
 word_cloud
 
 def makeImage(text):
-    alice_mask = np.array(Image.open("C:\\Users\\91798\\Desktop\\WAA\\WAA\\b1.png"))
+    alice_mask = np.array(Image.open("static\\b1.png"))
     wc = WordCloud(background_color="white", max_words=1000, mask=alice_mask)
     # generate word cloud
     wc.generate_from_frequencies(text)
