@@ -15,8 +15,8 @@ def uploaded():
         from analysis2 import p,neg,neu,dataInsights
         l = []
         l.append(p)
-        l.append(neu) 
-        l.append(neg) 
+        l.append(neu)
+        l.append(neg)
         # print(l)
         context = {'analysis': dataInsights()}
         return render_template('Analysis.html',text=l,context=context)
@@ -32,10 +32,14 @@ def range():
         end= request.form['end-date']
         print(end)
         from analysis2 import df2,sentiment_analysis
-        ans=sentiment_analysis(df2,start,end)
+        ans,p,neg,neu=sentiment_analysis(df2,start,end)
         print(ans)
-        context={'analysis':ans}        
-        return render_template('range.html',context=context)
+        context={'analysis':ans}      
+        l=[]
+        l.append(p) 
+        l.append(neu)
+        l.append(neg) 
+        return render_template('range.html',text=l,context=context)
     return render_template('range.html')
         
     
