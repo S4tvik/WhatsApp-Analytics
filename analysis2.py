@@ -405,6 +405,7 @@ def sentiment_analysis(df,start,end):
     else:
       return "Negative"
   dfDate['sentiment'] = dfDate['scores'].apply(lambda x:score_to_rating(x))
+  dfDate['senti'] = dfDate['scores'].apply(lambda x:score_to_senti(x))
   count = list(dfDate['sentiment'])
   value = Counter(count)
   Negative = value[0] if value[0] else -1
@@ -438,6 +439,14 @@ def sentiment_analysis(df,start,end):
     neg.append("There are no Negative messages")
   if len(neu)==0:
     neu.append("There are no Neutral messages")
+  real=dfDate['senti'].tolist()
+  real=Counter(real)
+  labels = list(real.keys())
+  values = list(real.values())
+  fig = go.Figure(data=[go.Pie(labels=labels, values=values, textinfo='label+percent',insidetextorientation='radial')])
+  fig.update_layout(title='Sentiment',title_x=0.5)
+  # fig.show()
+  fig.write_html('./static/fig8.html')
   return finalSentiment,p,neg,neu
 dfNone = df.copy()
 dfNone = dfNone[dfNone.Author == "None"]
