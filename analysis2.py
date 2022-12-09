@@ -100,6 +100,9 @@ import plotly.express as px
 fig = px.histogram(y=list(top_user_bychat.values()),x=list(top_user_bychat.keys()))
 fig.update_layout(title='Number of messages per users',title_x=0.5,xaxis_title='Users',yaxis_title='No of messages')
 # fig.show()
+fig.update_layout({
+    'plot_bgcolor': 'rgba(0,0,0,0)',
+    'paper_bgcolor': 'rgba(0,0,0,0)'})
 fig.write_html('./static/fig1.html')
 topMedia = df[df.Message == '<Media omitted>'].groupby('Author').count().sort_values(by="Message", ascending = False).head(10)
 topMedia.drop(columns=['dates','year','month','hour','date','minutes','day','words','dateTime'],inplace=True)
@@ -112,6 +115,9 @@ import plotly.graph_objects as go
 labels = list(media['media_sent'].keys())
 values = list(media['media_sent'].values())
 fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.5)])
+fig.update_layout({
+    'plot_bgcolor': 'rgba(0,0,0,0)',
+    'paper_bgcolor': 'rgba(0,0,0,0)'})
 fig.update_layout(title='Number of media sent per users',title_x=0.5)
 
 # fig.show()
@@ -137,6 +143,9 @@ x = list(most_active_hours.keys())
 y=  list(most_active_hours.values())
 fig = go.Figure(data=go.Scatter(x=x, y=y))
 fig.update_layout(title='Activity by Hours',title_x=0.5,xaxis_title='Hour',yaxis_title='No of messages')
+fig.update_layout({
+    'plot_bgcolor': 'rgba(0,0,0,0)',
+    'paper_bgcolor': 'rgba(0,0,0,0)'})
 # fig.show()
 fig.write_html('./static/fig3.html')
 
@@ -172,6 +181,9 @@ fig.update_layout(
     ),
     title='Number of messages by day'
 )
+fig.update_layout({
+    'plot_bgcolor': 'rgba(0,0,0,0)',
+    'paper_bgcolor': 'rgba(0,0,0,0)'})
 
 
 # fig.show()
@@ -205,6 +217,9 @@ import plotly.io as pio
 fig = px.bar(y=list(most_active_month.values()), x=list(most_active_month.keys()), text_auto='.2s')
 fig.update_layout(title='Number of messages per Month',title_x=0.5,yaxis_title='No of messages')
 fig.update_traces(textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
+fig.update_layout({
+    'plot_bgcolor': 'rgba(0,0,0,0)',
+    'paper_bgcolor': 'rgba(0,0,0,0)'})
 # fig.show()
 fig.write_html('./static/fig5.html')
 
@@ -232,12 +247,15 @@ for i in emoji_dict.keys():
   emoji_final[emojis.encode(i)] = emoji_dict[i] 
 # emoji_final
 
-real = (dict(sorted(emoji_final.items(), key=operator.itemgetter(1), reverse=True)[:10]))
+real = (dict(sorted(emoji_final.items(), key=operator.itemgetter(1), reverse=True)[:5]))
 labels = list(real.keys())
 values = list(real.values())
 fig = go.Figure(data=[go.Pie(labels=labels, values=values, textinfo='label+percent',insidetextorientation='radial')])
 fig.update_layout(title='Number of emojis',title_x=0.5)
 # fig.show()
+fig.update_layout({
+    'plot_bgcolor': 'rgba(0,0,0,0)',
+    'paper_bgcolor': 'rgba(0,0,0,0)'})
 fig.write_html('./static/fig6.html')
 
 emoji_per_user={}
@@ -445,6 +463,9 @@ def sentiment_analysis(df,start,end):
   values = list(real.values())
   fig = go.Figure(data=[go.Pie(labels=labels, values=values, textinfo='label+percent',insidetextorientation='radial')])
   fig.update_layout(title='Sentiment',title_x=0.5)
+  fig.update_layout({
+    'plot_bgcolor': 'rgba(0,0,0,0)',
+    'paper_bgcolor': 'rgba(0,0,0,0)'})
   # fig.show()
   fig.write_html('./static/fig8.html')
   return finalSentiment,p,neg,neu

@@ -37,7 +37,7 @@ def range():
         context={'analysis':ans}      
         l=[]
         l.append(p) 
-        l.append(neu)
+        # l.append(neu)
         l.append(neg) 
         return render_template('range.html',text=l,context=context)
     return render_template('range.html')
